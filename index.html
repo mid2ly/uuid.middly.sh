@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>uuid.middly.sh</title>
+
+    <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            background-color: black;
+        }
+
+        .uuid {
+            position: relative;
+            background-color: inherit;
+            font-family: 'SF Pro Display', sans-serif;
+            text-align: center;
+            font-size: 4.5vw;
+            font-weight: bold;
+            color: white;
+            border: solid rgb(235 235 245 / 30%);
+            border-left: 0;
+            border-right: 0;
+            padding: 30px 0;
+
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .uuid::before, .uuid::after {
+            position: absolute;
+            left: 50%;
+            background-color: inherit;
+            padding: 0 2vw;
+            color: rgb(235 235 245 / 30%);
+        }
+
+        .uuid::before {
+            top: 0;
+            transform: translate(-50%, -50%);
+            content: 'UUID';
+            font-size: 3vw;
+        }
+
+        .uuid::after {
+            bottom: 0;
+            transform: translate(-50%, 50%);
+            content: 'CLICK TO COPY';
+            font-size: 2.5vw;
+        }
+
+        .uuid.copied {
+            border-color: #0A84FF;
+        }
+
+        .uuid.copied::after, .uuid.copied::before {
+            color: #0A84FF;
+        }
+
+        .uuid.copied::after {
+            content: 'COPIED!';
+        }
+
+        .uuid::after, .uuid::before {
+            transition: color 0.2s linear;
+        }
+        .uuid {
+            transition: border 0.2s linear;
+        }
+    </style>
+
+    <script>
+        let timeoutID = 0;
+        window.addEventListener('DOMContentLoaded', () => {
+            const uuidElement = document.getElementById('uuid');
+            uuidElement.innerHTML = crypto.randomUUID();
+            uuidElement.addEventListener('click', () => {
+                const temp = document.createElement('input');
+                document.body.appendChild(temp);
+                temp.value = uuidElement.innerHTML;
+                temp.select();
+                document.execCommand('copy');
+                document.body.removeChild(temp);
+
+                uuidElement.classList.add('copied');
+                clearTimeout(timeoutID)
+                timeoutID = setTimeout(() => {
+                    uuidElement.classList.remove('copied');
+                }, 5000);
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="uuid" class="uuid"></div>
+</body>
+</html>
